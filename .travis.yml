@@ -74,14 +74,11 @@ matrix:
         # version, we must instead delete the Travis copy of CMake.
         - sudo rm -rf /usr/local/cmake*
         - pip install --upgrade mbed-tools
-        - pip install prettytable==0.7.2
-        - pip install future==0.16.0
-        - pip install "Jinja2>=2.10.1,<2.11"
-        - pip install "intelhex>=1.3,<=2.2.1"
+        - mbedtools deploy
+        - pip install -r mbed-os/tools/cmake/requirements.txt
       script:
-        - mbedtools checkout
-        - echo mbedtools build -t GCC_ARM -m ${TARGET_NAME} -b ${PROFILE}
-        - mbedtools build -t GCC_ARM -m ${TARGET_NAME} -b ${PROFILE}
+        - echo mbedtools compile -t GCC_ARM -m ${TARGET_NAME} -b ${PROFILE}
+        - mbedtools compile -t GCC_ARM -m ${TARGET_NAME} -b ${PROFILE}
         - ccache -s
 
     - <<: *cmake-build-test

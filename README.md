@@ -12,37 +12,62 @@ The application injects a dummy root of trust (ROT) if true random number genera
 * An mbed-os supported development board.
 * A micro-USB cable.
 
-**NOTE:** Currently this application defines settings only for K66F board. Please refer to [Storage Configuration](https://os.mbed.com/docs/mbed-os/latest/reference/storage.html) from Mbed OS documentation as the DeviceKey requires KVStore to be configured.
+## Mbed OS build tools
 
-##  Getting started ##
+### Mbed CLI 2
+Starting with version 6.5, Mbed OS uses Mbed CLI 2. It uses Ninja as a build system, and CMake to generate the build environment and manage the build process in a compiler-independent manner. If you are working with Mbed OS version prior to 6.5 then check the section [Mbed CLI 1](#mbed-cli-1).
+1. [Install Mbed CLI 2](https://os.mbed.com/docs/mbed-os/latest/build-tools/install-or-upgrade.html).
+1. From the command-line, import the example: `mbed-tools import mbed-os-example-devicekey`
+1. Change the current directory to where the project was imported.
 
- 1. Import the example.
+### Mbed CLI 1
+1. [Install Mbed CLI 1](https://os.mbed.com/docs/mbed-os/latest/quick-start/offline-with-mbed-cli.html).
+1. From the command-line, import the example: `mbed import mbed-os-example-devicekey`
+1. Change the current directory to where the project was imported.
 
+## Building and running
+
+1. Connect a USB cable between the USB port on the target and the host computer.
+1. Run the following command to build the example project and program the microcontroller flash memory:
+
+    * Mbed CLI 2
+
+    ```bash
+    $ mbed-tools compile -m <TARGET> -t <TOOLCHAIN> --flash --sterm
     ```
-    mbed import mbed-os-example-devicekey
-    cd mbed-os-example-devicekey
+
+    * Mbed CLI 1
+
+    ```bash
+    $ mbed compile -m <TARGET> -t <TOOLCHAIN> --flash --sterm
     ```
 
- 2. Compile and generate binary.
+Your PC may take a few minutes to compile your code.
 
-    For example, for `GCC`:
+The binary is located at:
 
+* **Mbed CLI 2** -
+  `./cmake_build/<TARGET>/develop/<TOOLCHAIN>/mbed-os-example-devicekey.bin`
+
+* **Mbed CLI 1** - `./BUILD/<TARGET>/<TOOLCHAIN>/mbed-os-example-devicekey.bin`.
+
+You can manually copy the binary to the target, which gets mounted on the host
+computer through USB, rather than using the `--flash` option.
+
+You can also open a serial terminal separately, rather than using the `--sterm`
+option, with the following command:
+
+* Mbed CLI 2
+    ```bash
+    $ mbed-tools sterm
     ```
-    mbed compile -t GCC_ARM -m <your device>
+
+* Mbed CLI 1
+    ```bash
+    $ mbed sterm
     ```
-   
- 3. Open a serial console session with the target platform using the following parameters:
 
-    * **Baud rate:** 9600
-    * **Data bits:** 8
-    * **Stop bits:** 1
-    * **Parity:** None
-
- 5. Copy the application `mbed-os-example-devicekey.bin` in the folder `mbed-os-example-devicekey/BUILD/<TARGET NAME>/<PLATFORM NAME>` onto the target board.
-
- 6. Press the **RESET** button on the board to run the program
-
- 7. The serial console should now display a series of results. 
+The expected log can be found in [`tests/devicekey.log`](tests/devicekey.log).
 
 ## Troubleshooting
 
