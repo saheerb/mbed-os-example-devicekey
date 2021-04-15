@@ -56,15 +56,27 @@ int main()
     //If TRNG is not available it is a must to inject the ROT before the first call to derive key method.
     printf("\n--- No TRNG support for this device. injecting ROT. ---\n");
     ret = inject_rot_key();
-    if (DEVICEKEY_SUCCESS != ret && DEVICEKEY_ALREADY_EXIST != ret) {
-        printf("\n--- Error, injection of ROT key has failed with status %d ---\n", ret);
+    if (DEVICEKEY_ALREADY_EXIST == ret) {
+        printf("\n--- ROT Key already exists in the persistent memory. ---\n", ret);
+    } else if (DEVICEKEY_SUCCESS == ret) {
+        printf("\n--- ROT Key injected and stored in persistent memory. ---\n", ret);
+    } else {
+        printf("--- Error, injection of RoT key failed with error code %d ---\n", ret);
         return -1;
     }
 
-    if ( DEVICEKEY_ALREADY_EXIST == ret ) {
+#else
+
+    // The ROT must be present before the first call to derive key method.
+    printf("\n--- Generating ROT. ---\n");
+    ret = devkey.generate_root_of_trust();
+    if (DEVICEKEY_ALREADY_EXIST == ret) {
         printf("\n--- ROT Key already exists in the persistent memory. ---\n", ret);
+    } else if (DEVICEKEY_SUCCESS == ret) {
+        printf("\n--- ROT Key generated and stored in persistent memory. ---\n", ret);
     } else {
-        printf("\n--- ROT Key injected and stored in persistent memory. ---\n", ret);
+        printf("--- Error, generation of RoT key failed with error code %d ---\n", ret);
+        return -1;
     }
 
 #endif
